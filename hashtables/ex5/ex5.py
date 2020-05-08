@@ -1,3 +1,30 @@
+class FileNode:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+    
+    def insert_after(self, node):
+        self.next = node
+
+class FileList:
+    def __init__(self, head=None):
+        self.head = head
+    
+    def insert(self, value):
+        if self.head is None:
+            self.head = FileNode(value)
+        else:
+            current_node = self.head
+            while current_node.next is not None:
+                current_node = current_node.next
+            current_node.insert_after(FileNode(value))
+    
+    def for_each(self, cb):
+        current_node = self.head
+        while current_node is not None:
+            cb(current_node.value)
+            current_node = current_node.next
+
 def finder(files, queries):
     cache = {}
     result = []
@@ -5,14 +32,13 @@ def finder(files, queries):
     for file in files:
         filename = file.split('/')[-1]
         if filename not in cache:
-            cache[filename] = [file]
+            cache[filename] = FileList(FileNode(file))
         else:
-            cache[filename].append(file)
+            cache[filename].insert(file)
 
     for query in queries:
         if query in cache:
-            for file in cache[query]:
-                result.append(file)
+            cache[query].for_each(result.append)
 
     return result
 
