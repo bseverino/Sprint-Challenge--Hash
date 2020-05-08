@@ -1,8 +1,18 @@
 def finder(files, queries):
+    cache = {}
+    result = []
 
-    """
-    YOUR CODE HERE
-    """
+    for file in files:
+        filename = file.split('/')[-1]
+        if filename not in cache:
+            cache[filename] = [file]
+        else:
+            cache[filename].append(file)
+
+    for query in queries:
+        if query in cache:
+            for file in cache[query]:
+                result.append(file)
 
     return result
 
